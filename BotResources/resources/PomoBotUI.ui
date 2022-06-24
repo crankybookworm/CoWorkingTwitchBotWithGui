@@ -248,33 +248,48 @@
           <property name="title">
            <string>Commands Config</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="8" column="0">
-            <widget class="QCheckBox" name="rmvTaskCheck">
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="pomoCheck">
              <property name="font">
               <font>
-               <family>MS Shell Dlg 2</family>
                <pointsize>13</pointsize>
                <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
-             <property name="layoutDirection">
-              <enum>Qt::RightToLeft</enum>
-             </property>
              <property name="autoFillBackground">
               <bool>false</bool>
              </property>
              <property name="text">
-              <string extracomment="Remove task from board">!rmvtask</string>
+              <string extracomment="Runs and modifies the pomos">!pomo</string>
              </property>
              <property name="checked">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="6" column="1">
-            <widget class="QCheckBox" name="finishCheck">
+           <item row="5" column="0">
+            <widget class="QCheckBox" name="flipCheck">
+             <property name="font">
+              <font>
+               <family>MS Shell Dlg 2</family>
+               <pointsize>13</pointsize>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string>!flip</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QCheckBox" name="rmvDoneCheck">
              <property name="font">
               <font>
                <pointsize>13</pointsize>
@@ -286,7 +301,7 @@
               <bool>false</bool>
              </property>
              <property name="text">
-              <string extracomment="Ends the Pomo/Tasks and removes from board">!finish</string>
+              <string extracomment="Remove all done tasks from board">!rmvdone</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -294,6 +309,25 @@
             </widget>
            </item>
            <item row="6" column="0">
+            <widget class="QCheckBox" name="joinCheck">
+             <property name="font">
+              <font>
+               <family>MS Shell Dlg 2</family>
+               <pointsize>13</pointsize>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string>!join</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
             <widget class="QCheckBox" name="doneCheck">
              <property name="font">
               <font>
@@ -317,9 +351,10 @@
             </widget>
            </item>
            <item row="4" column="0">
-            <widget class="QCheckBox" name="sleepersCheck">
+            <widget class="QCheckBox" name="rmvTaskCheck">
              <property name="font">
               <font>
+               <family>MS Shell Dlg 2</family>
                <pointsize>13</pointsize>
                <weight>50</weight>
                <bold>false</bold>
@@ -332,54 +367,14 @@
               <bool>false</bool>
              </property>
              <property name="text">
-              <string extracomment="Lists users that are on their break session">!sleepers</string>
+              <string extracomment="Remove task from board">!rmvtask</string>
              </property>
              <property name="checked">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="8" column="1">
-            <widget class="QCheckBox" name="rmvDoneCheck">
-             <property name="font">
-              <font>
-               <pointsize>13</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string extracomment="Remove all done tasks from board">!rmvdone</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QCheckBox" name="grindersCheck">
-             <property name="font">
-              <font>
-               <pointsize>13</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string extracomment="Shows which users are in their work session">!grinders</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
+           <item row="1" column="0">
             <widget class="QCheckBox" name="timerCheck">
              <property name="font">
               <font>
@@ -402,27 +397,7 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QCheckBox" name="pomoCheck">
-             <property name="font">
-              <font>
-               <pointsize>13</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string extracomment="Runs and modifies the pomos">!pomo</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
+           <item row="2" column="1">
             <widget class="QCheckBox" name="taskCheck">
              <property name="font">
               <font>
@@ -436,6 +411,65 @@
              </property>
              <property name="text">
               <string extracomment="Shows your task or allws you to add new task">!task</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QCheckBox" name="unflipCheck">
+             <property name="font">
+              <font>
+               <family>MS Shell Dlg 2</family>
+               <pointsize>13</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>!unflip</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QCheckBox" name="grindersCheck">
+             <property name="font">
+              <font>
+               <pointsize>13</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string extracomment="Shows which users are in their work session">!grinders</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QCheckBox" name="sleepersCheck">
+             <property name="font">
+              <font>
+               <pointsize>13</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string extracomment="Lists users that are on their break session">!sleepers</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -465,27 +499,28 @@
              </property>
             </widget>
            </item>
-           <item row="9" column="0">
-            <widget class="QCheckBox" name="flipCheck">
+           <item row="3" column="1">
+            <widget class="QCheckBox" name="finishCheck">
              <property name="font">
               <font>
-               <family>MS Shell Dlg 2</family>
                <pointsize>13</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
-             <property name="layoutDirection">
-              <enum>Qt::RightToLeft</enum>
+             <property name="autoFillBackground">
+              <bool>false</bool>
              </property>
              <property name="text">
-              <string>!flip</string>
+              <string extracomment="Ends the Pomo/Tasks and removes from board">!finish</string>
              </property>
              <property name="checked">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="9" column="1">
-            <widget class="QCheckBox" name="unflipCheck">
+           <item row="6" column="1">
+            <widget class="QCheckBox" name="leaveCheck">
              <property name="font">
               <font>
                <family>MS Shell Dlg 2</family>
@@ -493,10 +528,10 @@
               </font>
              </property>
              <property name="text">
-              <string>!unflip</string>
+              <string>!leave</string>
              </property>
              <property name="checked">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -881,7 +916,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>541</width>
-                 <height>315</height>
+                 <height>280</height>
                 </rect>
                </property>
                <property name="font">
@@ -924,8 +959,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>541</width>
-                 <height>303</height>
+                 <width>468</width>
+                 <height>243</height>
                 </rect>
                </property>
                <property name="font">
@@ -991,8 +1026,8 @@
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>-171</y>
-                 <width>524</width>
+                 <y>0</y>
+                 <width>98</width>
                  <height>474</height>
                 </rect>
                </property>
@@ -1084,8 +1119,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>541</width>
-                 <height>303</height>
+                 <width>98</width>
+                 <height>243</height>
                 </rect>
                </property>
                <property name="font">
@@ -1130,6 +1165,35 @@
                   </property>
                   <property name="plainText">
                    <string>The total time left should not exceed 300 minutes.</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="page">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>98</width>
+                 <height>166</height>
+                </rect>
+               </property>
+               <attribute name="label">
+                <string>!pomo stats</string>
+               </attribute>
+               <layout class="QVBoxLayout" name="verticalLayout_15">
+                <item>
+                 <widget class="QPlainTextEdit" name="userStats">
+                  <property name="plainText">
+                   <string>{username}: Total Work Time={totalTime} Completed Tasks={totalTasks} Completed Pomos={totalPomos}</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPlainTextEdit" name="noUserStats">
+                  <property name="plainText">
+                   <string>No User Stats Available!</string>
                   </property>
                  </widget>
                 </item>
@@ -1260,8 +1324,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>541</width>
-                 <height>350</height>
+                 <width>98</width>
+                 <height>89</height>
                 </rect>
                </property>
                <property name="font">
@@ -1298,8 +1362,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>541</width>
-                 <height>350</height>
+                 <width>98</width>
+                 <height>320</height>
                 </rect>
                </property>
                <property name="font">
@@ -1377,6 +1441,14 @@
                </layout>
               </widget>
               <widget class="QWidget" name="page_9">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>98</width>
+                 <height>320</height>
+                </rect>
+               </property>
                <property name="font">
                 <font>
                  <pointsize>13</pointsize>
@@ -1474,8 +1546,8 @@
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>-1</y>
-                 <width>522</width>
+                 <y>0</y>
+                 <width>98</width>
                  <height>628</height>
                 </rect>
                </property>
@@ -1602,7 +1674,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>522</width>
+                 <width>98</width>
                  <height>628</height>
                 </rect>
                </property>

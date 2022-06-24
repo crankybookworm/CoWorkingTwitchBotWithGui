@@ -1,5 +1,5 @@
 import json
-from pomo_logic import Task, Timer
+from pomo_logic import Task, Timer, WorkingUser
 
 class SafeDict(dict):
     def __missing__(self, key):
@@ -18,7 +18,7 @@ class ChatBotConfig():
             chatBotConfigJson, object_hook=lambda d: ChatBotConfig(**d))
         return chatBotConfig
     
-    def getText(self, textName: str, timer: Timer=None, task: Task=None, **kwargs):
+    def getText(self, textName: str, timer: Timer=None, task: Task=None, workingUser: WorkingUser=None, **kwargs):
         try:
             message: str = vars(self)[textName]
             if(timer):
@@ -37,6 +37,13 @@ class ChatBotConfig():
                     username=task.userDisplayName, 
                     taskWork=task.taskWork, 
                     timeTaken=task.timeTakenM, 
+                ))
+            elif(workingUser):
+                message = message.format_map(SafeDict(
+                    username=workingUser.userDisplayName, 
+                    totalTime=workingUser.totalTimeM, 
+                    totalPomos=workingUser.totalPomosCompleted, 
+                    totalTasks=workingUser.totalTasksCompleted, 
                 ))
             if(len(kwargs)>0):
                 message = message.format_map(SafeDict(**kwargs))

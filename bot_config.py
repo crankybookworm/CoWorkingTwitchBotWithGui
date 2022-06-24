@@ -21,6 +21,8 @@ class BotConfig():
                  rmvDoneCmdEnabled: bool = True,
                  flipCmdEnabled: bool = True,
                  unflipCmdEnabled: bool = True,
+                 joinCmdEnabled: bool = False,
+                 leaveCmdEnabled: bool = False,
 
                  fileOutputEnabled: bool = False,
                  fileOutputLocation: str = None,
@@ -45,6 +47,8 @@ class BotConfig():
         self.rmvDoneCmdEnabled: bool = rmvDoneCmdEnabled
         self.flipCmdEnabled: bool = flipCmdEnabled
         self.unflipCmdEnabled: bool = unflipCmdEnabled
+        self.joinCmdEnabled: bool = joinCmdEnabled
+        self.leaveCmdEnabled: bool = leaveCmdEnabled
 
         self.fileOutputEnabled: bool = fileOutputEnabled
         self.fileOutputLocation: str = fileOutputLocation
@@ -83,6 +87,8 @@ class BotConfig():
                   rmvDoneCmdEnabled: bool = None,
                   flipCmdEnabled: bool = None,
                   unflipCmdEnabled: bool = None,
+                  joinCmdEnabled: bool = None,
+                  leaveCmdEnabled: bool = None,
 
                   fileOutputEnabled: bool = None,
                   fileOutputLocation: str = None,
@@ -120,12 +126,8 @@ class BotConfig():
         if(fileOutputLocation is None):
             if(fileOutputEnabled):
                 return "Your File Output Location is required"
-            else:
-                self.fileOutputEnabled = fileOutputEnabled
         else:
             self.fileOutputLocation = fileOutputLocation
-            self.fileOutputEnabled = fileOutputEnabled
-            
 
         self.botPrefix = botPrefix
         self.oAuthToken = oAuthToken
@@ -143,6 +145,8 @@ class BotConfig():
         self.rmvDoneCmdEnabled = rmvDoneCmdEnabled if rmvDoneCmdEnabled else self.rmvDoneCmdEnabled
         self.flipCmdEnabled = flipCmdEnabled if flipCmdEnabled else self.flipCmdEnabled
         self.unflipCmdEnabled = unflipCmdEnabled if unflipCmdEnabled else self.unflipCmdEnabled
+        self.joinCmdEnabled = joinCmdEnabled if joinCmdEnabled else self.joinCmdEnabled
+        self.leaveCmdEnabled = leaveCmdEnabled if leaveCmdEnabled else self.leaveCmdEnabled
 
         self.fileOutputEnabled = fileOutputEnabled if fileOutputEnabled else self.fileOutputEnabled
 

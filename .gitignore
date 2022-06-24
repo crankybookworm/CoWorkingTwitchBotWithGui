@@ -4,6 +4,7 @@ __pycache__/
 .vscode/
 build/
 dist/
+.qt_for_python/
 
 *.log
 **/botDatabase.json

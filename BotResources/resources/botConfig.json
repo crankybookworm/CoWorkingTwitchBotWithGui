@@ -15,11 +15,13 @@
     "rmvDoneCmdEnabled": true,
     "flipCmdEnabled": true,
     "unflipCmdEnabled": true,
+    "joinCmdEnabled": false,
+    "leaveCmdEnabled": false,
 
     "fileOutputEnabled": false,
     "fileOutputLocation": null,
 
     "webOutputEnabled": true,
-    "webOutputHost": "0.0.0.0",
+    "webOutputHost": "localhost",
     "webOutputPort": 8080
 }

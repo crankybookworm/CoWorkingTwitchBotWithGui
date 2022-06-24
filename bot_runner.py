@@ -61,11 +61,29 @@ class PomoBotUi(QtWidgets.QMainWindow):
         self.show()
 
     def setUpButtons(self):
-        # Start Bot Button
-        self.startBotButton: QtWidgets.QPushButton = self.window().findChild(
-            QtWidgets.QPushButton, "botTriggerButton")
-        self.startBotButton.clicked.connect(self.triggerBot)
+        self.SetupStatusOnControl()
+        self.SetupButtonsOnBotSettings()
+        self.SetupsCheckboxesOnBotSettings()
+        self.SetupsEntriesOnBotSettings()
+        self.SetupEntriesOnChatBotConfig()
 
+
+    def SetupStatusOnControl(self):
+        # Trigger Bot Button
+        self.triggerBotButton: QtWidgets.QPushButton = self.window().findChild(
+            QtWidgets.QPushButton, "botTriggerButton")
+        self.triggerBotButton.clicked.connect(self.triggerBot)
+
+        # Setups Status on Control
+        self.pomoBrdStsLabel: QtWidgets.QLabel = self.window(
+        ).findChild(QtWidgets.QLabel, "pomoBrdStsLabel")
+        self.botStatusLabel: QtWidgets.QLabel = self.window(
+        ).findChild(QtWidgets.QLabel, "botStatusLabel")
+        self.pomsNumLabel: QtWidgets.QLCDNumber = self.window(
+        ).findChild(QtWidgets.QLCDNumber, "pomsNumLabel")
+
+
+    def SetupButtonsOnBotSettings(self):
         # Save Button on Bot Settings
         saveBotConfigButton: QtWidgets.QPushButton = self.window().findChild(
             QtWidgets.QDialogButtonBox, "saveOrResetBotConfig").children()[1]
@@ -87,15 +105,17 @@ class PomoBotUi(QtWidgets.QMainWindow):
         resetChatBotConfigButton.clicked.connect(self.resetChatBotConfig)
         
         # Browse Button on Bot Settings
-        startBotButton: QtWidgets.QPushButton = self.window().findChild(
+        fileBrowseButton: QtWidgets.QPushButton = self.window().findChild(
             QtWidgets.QPushButton, "fileBrowseButton")
-        startBotButton.clicked.connect(self.openFileBrowser)
+        fileBrowseButton.clicked.connect(self.openFileBrowser)
         
         # Browse Button on Bot Settings
-        startBotButton: QtWidgets.QPushButton = self.window().findChild(
+        oAuthLinkButton: QtWidgets.QPushButton = self.window().findChild(
             QtWidgets.QPushButton, "oAuthLinkButton")
-        startBotButton.clicked.connect(self.openTokenLink)
+        oAuthLinkButton.clicked.connect(self.openTokenLink)
 
+
+    def SetupsCheckboxesOnBotSettings(self):
         # Setups Checkboxes on Bot Settings
         self.pomoCheck: QtWidgets.QCheckBox = self.window(
         ).findChild(QtWidgets.QCheckBox, "pomoCheck")
@@ -119,12 +139,18 @@ class PomoBotUi(QtWidgets.QMainWindow):
         ).findChild(QtWidgets.QCheckBox, "flipCheck")
         self.unflipCheck: QtWidgets.QCheckBox = self.window(
         ).findChild(QtWidgets.QCheckBox, "unflipCheck")
+        self.joinCheck: QtWidgets.QCheckBox = self.window(
+        ).findChild(QtWidgets.QCheckBox, "joinCheck")
+        self.leaveCheck: QtWidgets.QCheckBox = self.window(
+        ).findChild(QtWidgets.QCheckBox, "leaveCheck")
 
         self.fileOutputCheck: QtWidgets.QCheckBox = self.window(
         ).findChild(QtWidgets.QCheckBox, "fileOutputCheck")
         self.webOutputCheck: QtWidgets.QCheckBox = self.window(
         ).findChild(QtWidgets.QCheckBox, "webOutputCheck")
 
+
+    def SetupsEntriesOnBotSettings(self):
         # Setups Entries on Bot Settings
         self.prefixEntry: QtWidgets.QLineEdit = self.window(
         ).findChild(QtWidgets.QLineEdit, "prefixEntry")
@@ -140,6 +166,8 @@ class PomoBotUi(QtWidgets.QMainWindow):
         self.webPortEntry: QtWidgets.QLineEdit = self.window(
         ).findChild(QtWidgets.QLineEdit, "webPortEntry")
 
+
+    def SetupEntriesOnChatBotConfig(self):
         # Setups Entries on ChatBot Config
         self.chatModeOn: QtWidgets.QPlainTextEdit = self.window(
         ).findChild(QtWidgets.QPlainTextEdit, "chatModeOn")
@@ -211,14 +239,28 @@ class PomoBotUi(QtWidgets.QMainWindow):
         ).findChild(QtWidgets.QPlainTextEdit, "invalidPermMod")
         self.invalidPermStreamer: QtWidgets.QPlainTextEdit = self.window(
         ).findChild(QtWidgets.QPlainTextEdit, "invalidPermStreamer")
-        
-        # Status on Control
-        self.pomoBrdStsLabel: QtWidgets.QLabel = self.window(
-        ).findChild(QtWidgets.QLabel, "pomoBrdStsLabel")
-        self.botStatusLabel: QtWidgets.QLabel = self.window(
-        ).findChild(QtWidgets.QLabel, "botStatusLabel")
-        self.pomsNumLabel: QtWidgets.QLCDNumber = self.window(
-        ).findChild(QtWidgets.QLCDNumber, "pomsNumLabel")
+        self.userStats: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "userStats")
+        self.noUserStats: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "noUserStats")
+        self.rmvDoneInfo: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "rmvDoneInfo")
+        self.rmvDone: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "rmvDone")
+        self.rmvDoneFail: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "rmvDoneFail")
+        self.rmvDoneNum: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "rmvDoneNum")
+        self.rmvDoneNumFail: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "rmvDoneNumFail")
+        self.rmvDoneUser: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "rmvDoneUser")
+        self.rmvDoneUserFail: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "rmvDoneUserFail")
+        self.rmvDoneUserNum: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "rmvDoneUserNum")
+        self.rmvDoneUserNumFail: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "rmvDoneUserNumFail")
         
 
     def raiseError(self, error):
@@ -240,7 +282,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
 
     def openTokenLink(self):
         try:
-            webbrowser.open("https://twitchtokengenerator.com")
+            webbrowser.open("https://twitchapps.com/tmi/")
         except Exception as e:
             logger.log(logging.ERROR, "Error stopping bot: %s", PomoBotUi.format_exception(e))
             self.raiseError(PomoBotUi.format_exception(e))
@@ -263,6 +305,8 @@ class PomoBotUi(QtWidgets.QMainWindow):
                 rmvDoneCmdEnabled=self.rmvDoneCheck.isChecked(),
                 flipCmdEnabled=self.flipCheck.isChecked(),
                 unflipCmdEnabled=self.unflipCheck.isChecked(),
+                joinCmdEnabled=self.joinCheck.isChecked(),
+                leaveCmdEnabled=self.leaveCheck.isChecked(),
 
                 fileOutputEnabled=self.fileOutputCheck.isChecked(),
                 webOutputEnabled=self.webOutputCheck.isChecked(),
@@ -300,6 +344,8 @@ class PomoBotUi(QtWidgets.QMainWindow):
             self.rmvDoneCheck.setChecked(self.botConfig.rmvDoneCmdEnabled)
             self.flipCheck.setChecked(self.botConfig.flipCmdEnabled)
             self.unflipCheck.setChecked(self.botConfig.unflipCmdEnabled)
+            self.joinCheck.setChecked(self.botConfig.joinCmdEnabled)
+            self.leaveCheck.setChecked(self.botConfig.leaveCmdEnabled)
 
             self.fileOutputCheck.setChecked(self.botConfig.fileOutputEnabled)
             self.webOutputCheck.setChecked(self.botConfig.webOutputEnabled)
@@ -349,6 +395,17 @@ class PomoBotUi(QtWidgets.QMainWindow):
                 invalidIterations=self.invalidIterations.toPlainText(),
                 invalidPermMod=self.invalidPermMod.toPlainText(),
                 invalidPermStreamer=self.invalidPermStreamer.toPlainText(),
+                userStats=self.userStats.toPlainText(),
+                noUserStats=self.noUserStats.toPlainText(),
+                rmvDoneInfo=self.rmvDoneInfo.toPlainText(),
+                rmvDone=self.rmvDone.toPlainText(),
+                rmvDoneFail=self.rmvDoneFail.toPlainText(),
+                rmvDoneNum=self.rmvDoneNum.toPlainText(),
+                rmvDoneNumFail=self.rmvDoneNumFail.toPlainText(),
+                rmvDoneUser=self.rmvDoneUser.toPlainText(),
+                rmvDoneUserFail=self.rmvDoneUserFail.toPlainText(),
+                rmvDoneUserNum=self.rmvDoneUserNum.toPlainText(),
+                rmvDoneUserNumFail=self.rmvDoneUserNumFail.toPlainText(),
             )
 
             with open("BotResources/resources/chatBotConfig.json", 'w') as f:
@@ -402,6 +459,17 @@ class PomoBotUi(QtWidgets.QMainWindow):
             self.invalidPermMod.setPlainText(self.chatBotConfig.invalidPermMod)
             self.invalidPermStreamer.setPlainText(
                 self.chatBotConfig.invalidPermStreamer)
+            self.userStats.setPlainText(self.chatBotConfig.userStats)
+            self.noUserStats.setPlainText(self.chatBotConfig.noUserStats)
+            self.rmvDoneInfo.setPlainText(self.chatBotConfig.rmvDoneInfo)
+            self.rmvDone.setPlainText(self.chatBotConfig.rmvDone)
+            self.rmvDoneFail.setPlainText(self.chatBotConfig.rmvDoneFail)
+            self.rmvDoneNum.setPlainText(self.chatBotConfig.rmvDoneNum)
+            self.rmvDoneNumFail.setPlainText(self.chatBotConfig.rmvDoneNumFail)
+            self.rmvDoneUser.setPlainText(self.chatBotConfig.rmvDoneUser)
+            self.rmvDoneUserFail.setPlainText(self.chatBotConfig.rmvDoneUserFail)
+            self.rmvDoneUserNum.setPlainText(self.chatBotConfig.rmvDoneUserNum)
+            self.rmvDoneUserNumFail.setPlainText(self.chatBotConfig.rmvDoneUserNumFail)
         except Exception as e:
             logger.log(logging.ERROR, "Error stopping bot: %s", PomoBotUi.format_exception(e))
             self.raiseError(PomoBotUi.format_exception(e))
@@ -427,7 +495,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
         self.botTriggerThread.start()
 
     def toggleBot(self):
-        sender = self.startBotButton
+        sender = self.triggerBotButton
         sender.setEnabled(False)
         if(self.botOn):
             if(self.stopBot()):

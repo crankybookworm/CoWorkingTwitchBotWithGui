@@ -93,7 +93,7 @@ class CoWorkingBot(Bot):
 
 ################ Setup Section Ended ################
 
-    @commands.command(name="hello")
+    @commands.command(name='hello')
     async def hello(self, ctx: commands.Context):
         # Send a hello back!
         await ctx.reply(self.chatBotConfig.getText("helloResponse", username=ctx.author.display_name))
@@ -149,6 +149,15 @@ class CoWorkingBot(Bot):
                 )
                 return
             await ctx.reply(self.chatBotConfig.getText("noRunningPomo", username=ctx.author.display_name))
+            return
+
+        # !pomo stats
+        elif (workPeriod.lower() == "stats"):
+            workingUser = Pomo.get_workingUser(channel, ctx.author)
+            if(workingUser):
+                await ctx.reply(self.chatBotConfig.getText("userStats", workingUser=workingUser))
+            else:
+                await ctx.reply(self.chatBotConfig.getText("noUserStats", username=ctx.author.display_name))
             return
 
         # !pomo +/-time
@@ -437,7 +446,7 @@ class CoWorkingBot(Bot):
         else:
             await ctx.reply(self.chatBotConfig.getText("noRunningPomo", username=ctx.author.display_name))
 
-    @commands.command(name="grinders")
+    @commands.command(name='grinders')
     async def grinders(self, ctx: commands.Context):
         timer_array: list[Timer] = Pomo.get_active_timers(
             ctx.channel.name.lower())
@@ -454,7 +463,7 @@ class CoWorkingBot(Bot):
                 users=users, username=ctx.author.display_name)
         await ctx.reply(message)
 
-    @commands.command(name="sleepers")
+    @commands.command(name='sleepers')
     async def sleepers(self, ctx: commands.Context):
         timer_array: list[Timer] = Pomo.get_active_timers(
             ctx.channel.name.lower())
@@ -471,7 +480,7 @@ class CoWorkingBot(Bot):
                 users=users, username=ctx.author.display_name)
         await ctx.reply(message)
 
-    @commands.command(name="purgeboard")
+    @commands.command(name='purgeboard')
     async def purgeBoard(self, ctx: commands.Context):
         if (ctx.author.name == ctx.channel.name):
             users = self.asyncTasks[ctx.channel.name].keys()
@@ -509,8 +518,11 @@ class CoWorkingBot(Bot):
     @commands.command(name='done')
     async def doneTask(self, ctx: commands.Context):
         if Pomo.has_active_timer(ctx.channel.name, ctx.author):
-            ctx.view.words[1] = 'complete'
-            await self.pomoCommand(ctx)
+            timer = Pomo.complete_timer(ctx.channel.name, ctx.author)
+            await ctx.reply(
+                self.chatBotConfig.getText("completeAll", timer=timer)
+            )
+            self.asyncTasks[ctx.channel.name][ctx.author.name].cancel()
             return
         if not Pomo.has_active_task(ctx.channel.name, ctx.author):
             await ctx.reply(self.chatBotConfig.getText("noRunningTask", username=ctx.channel.name))
@@ -535,7 +547,7 @@ class CoWorkingBot(Bot):
             self.chatBotConfig.getText("completedTask", task=task)
         )
 
-    @commands.command(name="rmvtask")
+    @commands.command(name='rmvtask')
     async def rmvTaskFromBoard(self, ctx: commands.Context, username: str = ''):
         if (ctx.author.is_mod):
             if (len(username) == 0):
@@ -554,7 +566,7 @@ class CoWorkingBot(Bot):
         else:
             await ctx.reply(self.chatBotConfig.getText("invalidPermMod", username=ctx.author.display_name))
 
-    @commands.command(name="rmvdone")
+    @commands.command(name='rmvdone')
     async def rmvDoneTasksFromBoard(self,
                                     ctx: commands.Context,
                                     arg1: str = '',
@@ -602,7 +614,7 @@ class CoWorkingBot(Bot):
             else:
                 await ctx.reply(self.chatBotConfig.getText("rmvDoneUserFail", username=username))
 
-    @commands.command(name="purgedone")
+    @commands.command(name='purgedone')
     async def purgeDone(self, ctx: commands.Context):
         if(ctx.author.is_mod):
             Pomo.remove_all_done(ctx.channel.name)
@@ -613,7 +625,7 @@ class CoWorkingBot(Bot):
 
 ################ Joining Section Started ################
 
-    @commands.command(name="join")
+    @commands.command(name='join')
     async def addCoWorkingStreamer(self,
                                    ctx: commands.Context,
                                    username=''):
@@ -636,7 +648,7 @@ class CoWorkingBot(Bot):
                 f"Joined channel {username}. Please visit the website /pomo/{username} to get the browser output. Use '!hello' in {username} channel to test if the bot has arrived."
             )
 
-    @commands.command(name="leave")
+    @commands.command(name='leave')
     async def removeCoWorkingStreamer(self,
                                       ctx: commands.Context,
                                       username: str = ''):
@@ -663,7 +675,7 @@ class CoWorkingBot(Bot):
 
 ################ Fun Commands Section Started ################
 
-    @commands.command(name="flip")
+    @commands.command(name='flip')
     async def flip(self, ctx: commands.Context, text: str = ''):
         if (len(text) == 0):
             text = ctx.author.display_name
@@ -675,7 +687,7 @@ class CoWorkingBot(Bot):
                 flippedText += chr
         await ctx.reply(f"(╯°□°）╯︵{flippedText}")
 
-    @commands.command(name="unflip")
+    @commands.command(name='unflip')
     async def unflip(self, ctx: commands.Context, text: str = ''):
         if (len(text) == 0):
             text = ctx.author.display_name
@@ -685,7 +697,7 @@ class CoWorkingBot(Bot):
 
 
 def startBot(bot: Bot):
-    t = Thread_With_Exception(target=bot.run, name="CoWorkingBot")
+    t = Thread_With_Exception(target=bot.run, name='CoWorkingBot')
     t.start()
     return t
 

@@ -14,15 +14,21 @@ import os
 import pytz
 import asyncio
 
-filepath = "BotResources/resources/botDatabase.json"
-if not os.path.exists(filepath.rsplit('/', 1)[0]):
-    os.makedirs(filepath.rsplit('/', 1)[0])
+# Use File Storage if on Replit. Otherwise use memory storage.
+try:
+    import replit
+    
+    filepath = "BotResources/resources/botDatabase.json"
+    if not os.path.exists(filepath.rsplit('/', 1)[0]):
+        os.makedirs(filepath.rsplit('/', 1)[0])
 
-if(not os.path.exists(filepath)):
-    with open(filepath, 'w') as f:
-        pass
+    if(not os.path.exists(filepath)):
+        with open(filepath, 'w') as f:
+            pass
 
-db = TinyDB(filepath, sort_keys=True, indent=4, )
+    db = TinyDB(filepath, sort_keys=True, indent=4, )
+except ImportError:
+    db = TinyDB(storage=MemoryStorage)
 
 
 
@@ -69,7 +75,8 @@ class Task(object):
         work: str = "Work",
         done: bool = False,
         startTime: Union[datetime.datetime, str] = None,
-        endTime: Union[datetime.datetime, str] = None
+        endTime: Union[datetime.datetime, str] = None,
+        **kwargs,
     ):
         self.username = username
         self.userDisplayName = userDisplayName if userDisplayName else username
@@ -285,18 +292,23 @@ class WorkingUser():
         username: str,
         userDisplayName: str = None,
         totalWorkTime: Union[datetime.timedelta, float] = None,
+        totalTasksCompleted: int = 0,
+        totalPomosCompleted: int = 0,
     ):
         self.username = username
         self.userDisplayName = userDisplayName if userDisplayName else username
         if(totalWorkTime):
-            if(type(totalWorkTime) is float):
+            if(type(totalWorkTime) is float or int):
                 self.totalWorkTime = datetime.timedelta(seconds=totalWorkTime)
             elif(type(totalWorkTime) is datetime.timedelta):
                 self.totalWorkTime = totalWorkTime
         else:
             self.totalWorkTime: datetime.timedelta = datetime.timedelta()
 
-    def to_dict(self) -> dict:
+        self.totalTasksCompleted = totalTasksCompleted
+        self.totalPomosCompleted = totalPomosCompleted
+
+    def to_dict(self) -> Dict:
         variables = vars(self)
         for k, v in variables.items():
             if (type(v) is datetime.datetime):
@@ -304,6 +316,13 @@ class WorkingUser():
             if (type(v) is datetime.timedelta):
                 variables[k] = v.total_seconds()
         return variables
+    
+    @property
+    def totalTimeM(self) -> int:
+        return round(self.totalWorkTime.total_seconds() / 60)
+    
+    def __str__(self) -> str:
+        return f"{self.userDisplayName}: Total Work Time={self.totalTimeM} Completed Tasks={self.totalTasksCompleted} Completed Pomos={self.totalPomosCompleted}"
 
 
 class Pomo():
@@ -620,9 +639,11 @@ class Pomo():
             "setChatMode", chatMode), **userQuery)
 
     @staticmethod
-    def add_done_task(channel: str, user: Union[Chatter, PartialChatter, str], doneTask: Task):
+    def add_done_task(channel: str, user: Union[Chatter, PartialChatter, str], doneTask: Union[Task, Timer]):
         table = db.table(channel.lower()+"-DoneTasks")
         userQuery = Pomo.get_userQuery(user)
+        if(type(doneTask) is Timer):
+            doneTask = Task(**(doneTask.to_dict()))
 
         if(table.contains(**userQuery)):
             userQuery = Pomo.get_userQuery(user, multiple=True)
@@ -635,20 +656,20 @@ class Pomo():
                          doneTask.to_dict()]), doc_id=user.id))
 
     @staticmethod
-    def add_work_time(channel: str, user: Union[Chatter, PartialChatter, str], timeTaken: datetime.timedelta):
+    def add_to_workingUser(channel: str, user: Union[Chatter, PartialChatter, str], task: Union[Task, Timer, datetime.timedelta]):
         table = db.table(channel.lower())
         userQuery = Pomo.get_userQuery(user)
         userQueryUpdate = Pomo.get_userQuery(user, multiple=True)
 
         if(table.contains(**userQuery)):
             table.update(Pomo.tinyDbOperations(
-                "addWorkTime", timeTaken), **userQueryUpdate)
+                "addToWorkingUser", task), **userQueryUpdate)
         else:
             if(type(user) is not Chatter):
                 raise ArgumentTypeError(f"{user} is not of Type Chatter")
             Pomo.write_workingUser(channel, user)
             table.update(Pomo.tinyDbOperations(
-                "addWorkTime", timeTaken), **userQueryUpdate)
+                "addToWorkingUser", task), **userQueryUpdate)
 
     # Finish stuff
 
@@ -688,9 +709,8 @@ class Pomo():
         timer = Pomo.get_timer(channel, user)
 
         if timer is not None:
-
             timer.endTask()
-            Pomo.add_work_time(channel, user, timer.timeTaken)
+            Pomo.add_to_workingUser(channel, user, timer)
             Pomo.remove_timer(channel, user)
             return timer
         return None
@@ -705,10 +725,26 @@ class Pomo():
         if(taskDict):
             task: Task = Task(**taskDict)
             task.endTask()
-            Pomo.add_work_time(channel, user, task.timeTaken)
+            Pomo.add_to_workingUser(channel, user, task)
             Pomo.add_done_task(channel, user, task)
             table.remove(**userQueryMultiple)
             return task
+        return None
+
+    @staticmethod
+    def complete_timer(channel: str, user: Union[Chatter, PartialChatter, str]) -> Optional[Timer]:
+        userQuery = Pomo.get_userQuery(user)
+        userQueryMultiple = Pomo.get_userQuery(user, multiple=True)
+
+        table = db.table(channel.lower()+"-Timer")
+        timerDict = table.get(**userQuery)
+        if(timerDict):
+            timer: Timer = Timer(**timerDict)
+            timer.endTask()
+            Pomo.add_to_workingUser(channel, user, timer)
+            Pomo.add_done_task(channel, user, timer)
+            table.remove(**userQueryMultiple)
+            return timer
         return None
 
     @staticmethod
@@ -720,7 +756,7 @@ class Pomo():
         if(taskDict):
             task: Task = Task(**taskDict)
             task.endTask()
-            Pomo.add_work_time(channel, user, task.timeTaken)
+            Pomo.add_to_workingUser(channel, user, task)
             userQuery = Pomo.get_userQuery(user, multiple=True)
             table.remove(**userQuery)
             return task
@@ -743,12 +779,20 @@ class Pomo():
         def removeDoneTasks(doc: Document):
             doc["doneTasks"] = []
 
-        def addWorkTime(doc: Document):
+        def addToWorkingUser(doc: Document):
             totalWorkTime = datetime.timedelta(seconds=doc.get("totalWorkTime"))
             if(type(item) is datetime.timedelta):
                 totalWorkTime += item
-            else:
+            elif(type(item) is float or int):
                 totalWorkTime += datetime.timedelta(minutes=item)
+            elif(type(item) is Task):
+                totalWorkTime += item.timeTaken
+                doc["totalTasksCompleted"] += 1
+            elif(type(item) is Timer):
+                totalWorkTime += item.timeTaken
+                doc["totalPomosCompleted"] += 1
+            else:
+                raise ValueError(f"Item of type '{type(item)}' is not Valid.")
             doc["totalWorkTime"] = totalWorkTime.total_seconds()
 
 
@@ -763,7 +807,7 @@ class Pomo():
         operationsDict: dict = {
             "addDoneTask": addDoneTask,
             "setChatMode": setChatMode,
-            "addWorkTime": addWorkTime,
+            "addToWorkingUser": addToWorkingUser,
             "removeDoneTask": removeDoneTask,
             "finishAllTasks": finishAllTasks,
             "removeDoneTasks": removeDoneTasks,

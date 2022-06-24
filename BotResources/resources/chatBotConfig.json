@@ -36,7 +36,8 @@
     "invalidTotalTime": "You can't work for that long. Please choose a time that doesn't exceed 300 minutes.",
     "invalidPermMod": "Nice Try! Only Mods can do this.",
     "invalidPermStreamer": "Nice Try! Only the Streamer can do this.",
-
+    "userStats": "{username}: Total Work Time={totalTime} Completed Tasks={totalTasks} Completed Pomos={totalPomos}",
+    "noUserStats": "No User Stats Available!",
     "rmvDoneInfo": "To use rmvdone command please make sure to follow this format '!rmvdone [index of the completed task]'. Leave index empty to remove all done tasks.",
     "rmvDone": "Removed all your completed tasks.",
     "rmvDoneFail": "Couldn't find any of your completed tasks.",

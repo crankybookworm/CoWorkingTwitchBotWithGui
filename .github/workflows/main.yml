@@ -96,7 +96,7 @@ jobs:
     
     - name: Package Application
       shell: bash
-      run: pyinstaller --clean -y bot_runner.spec
+      run: pyinstaller --clean -y -n "CoWorkingBot" --windowed --onefile --add-data="BotResources:BotResources" bot_runner.py
 
     - name: Add Necessary Resources
       run: |
