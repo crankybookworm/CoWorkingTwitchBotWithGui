@@ -1,0 +1,9 @@
+venv/
+.config/
+__pycache__/
+.vscode/
+build/
+dist/
+
+*.log
+**/botDatabase.json

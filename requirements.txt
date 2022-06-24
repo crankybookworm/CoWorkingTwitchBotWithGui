@@ -1,0 +1,7 @@
+twitchio==2.3.0
+PyQt5==5.15.6
+tinydb==4.7.0
+python-dateutil==2.8.2
+Flask==2.1.2
+pytz==2022.1
+pyinstaller

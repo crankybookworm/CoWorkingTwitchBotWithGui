@@ -1,0 +1,25 @@
+{
+    "botPrefix": "!",
+    "oAuthToken": "InsertYourOAuthAccessTokenHere",
+    "streamerUsername": "username",
+
+    "helloCmdEnabled": true,
+    "pomoCmdEnabled": true,
+    "timerCmdEnabled": true,
+    "grindersCmdEnabled": true,
+    "sleepersCmdEnabled": true,
+    "taskCmdEnabled": true,
+    "doneCmdEnabled": true,
+    "finishCmdEnabled": true,
+    "rmvTaskCmdEnabled": true,
+    "rmvDoneCmdEnabled": true,
+    "flipCmdEnabled": true,
+    "unflipCmdEnabled": true,
+
+    "fileOutputEnabled": false,
+    "fileOutputLocation": null,
+
+    "webOutputEnabled": true,
+    "webOutputHost": "0.0.0.0",
+    "webOutputPort": 8080
+}
