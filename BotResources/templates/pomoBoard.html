@@ -124,6 +124,7 @@
                         });
                     },
                     error: function(){
+                        $("#board").empty();
                         $("#board").append("Failed to get Data.\nPlease check if bot is working and data is valid");
                     }
                 })

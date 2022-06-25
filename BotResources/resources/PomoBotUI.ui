@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>607</width>
-    <height>701</height>
+    <height>732</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -183,8 +183,8 @@
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="2" column="0">
             <widget class="QPushButton" name="botTriggerButton">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -213,7 +213,7 @@
              </property>
             </widget>
            </item>
-           <item>
+           <item row="2" column="1">
             <widget class="QLabel" name="label">
              <property name="font">
               <font>
@@ -225,6 +225,42 @@
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QLabel" name="botTriggerError">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>13</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+               <underline>true</underline>
+              </font>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: #FF80AB;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -769,6 +805,9 @@
              <property name="text">
               <string>InsertYourOAuthAccessTokenHere</string>
              </property>
+             <property name="echoMode">
+              <enum>QLineEdit::PasswordEchoOnEdit</enum>
+             </property>
             </widget>
            </item>
            <item row="1" column="1">
@@ -916,7 +955,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>541</width>
-                 <height>280</height>
+                 <height>311</height>
                 </rect>
                </property>
                <property name="font">
@@ -1027,7 +1066,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
+                 <width>89</width>
                  <height>474</height>
                 </rect>
                </property>
@@ -1119,7 +1158,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
+                 <width>89</width>
                  <height>243</height>
                 </rect>
                </property>
@@ -1175,7 +1214,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
+                 <width>89</width>
                  <height>166</height>
                 </rect>
                </property>
@@ -1324,7 +1363,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
+                 <width>89</width>
                  <height>89</height>
                 </rect>
                </property>
@@ -1362,7 +1401,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
+                 <width>89</width>
                  <height>320</height>
                 </rect>
                </property>
@@ -1445,7 +1484,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
+                 <width>89</width>
                  <height>320</height>
                 </rect>
                </property>
@@ -1547,7 +1586,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
+                 <width>89</width>
                  <height>628</height>
                 </rect>
                </property>
@@ -1674,7 +1713,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
+                 <width>89</width>
                  <height>628</height>
                 </rect>
                </property>

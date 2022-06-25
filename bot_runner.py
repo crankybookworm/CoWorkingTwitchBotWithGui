@@ -79,8 +79,16 @@ class PomoBotUi(QtWidgets.QMainWindow):
         ).findChild(QtWidgets.QLabel, "pomoBrdStsLabel")
         self.botStatusLabel: QtWidgets.QLabel = self.window(
         ).findChild(QtWidgets.QLabel, "botStatusLabel")
+        self.botTriggerError: QtWidgets.QLabel = self.window(
+        ).findChild(QtWidgets.QLabel, "botTriggerError")
+        self.botTriggerError.setVisible(False)
         self.pomsNumLabel: QtWidgets.QLCDNumber = self.window(
         ).findChild(QtWidgets.QLCDNumber, "pomsNumLabel")
+
+        self.pomoMonitorThread=QtCore.QTimer(self)
+        self.pomoMonitorThread.timeout.connect(self.monitorPomos)
+        self.pomoMonitorThread.start(5000)
+        self.botTriggerError.setVisible(False)
 
 
     def SetupButtonsOnBotSettings(self):
@@ -493,6 +501,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
         self.botTriggerThread = QtCore.QThread(self)
         self.botTriggerThread.run = self.toggleBot
         self.botTriggerThread.start()
+        QtCore.QTimer.singleShot(10000, lambda: self.botTriggerError.setVisible(False))
 
     def toggleBot(self):
         sender = self.triggerBotButton
@@ -549,14 +558,11 @@ class PomoBotUi(QtWidgets.QMainWindow):
                                port=self.botConfig.webOutputPort)
                 self.pomoBrdStsLabel.setText("ON")
 
-            self.pomoMonitorThread = QtCore.QThread()
-            self.pomoMonitorThread.run = lambda: PomoBotUi.monitorPomos(self.pomsNumLabel, self.botConfig.streamerUsername, )
-            self.pomoMonitorThread.start()
-
             return True
         except Exception as e:
             logger.log(logging.ERROR, "Error starting bot: %s", PomoBotUi.format_exception(e))
-            self.raiseError(str(e))
+            self.botTriggerError.setText(str(e))
+            self.botTriggerError.setVisible(True)
             return False
 
     def stopBot(self):
@@ -586,7 +592,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
         
         if(self.pomoMonitorThread):
             try:
-                self.pomoMonitorThread.terminate()
+                self.pomoMonitorThread.stop()
                 self.pomoMonitorThread = None
             except AttributeError:
                 self.pomoMonitorThread = None
@@ -607,15 +613,15 @@ class PomoBotUi(QtWidgets.QMainWindow):
             self.raiseError(PomoBotUi.format_exception(e))
             return False
 
-    @staticmethod
-    def monitorPomos(pomsNumLabel: QtWidgets.QLCDNumber, streamerUsername: str):
-        while True:
-            try:
-                pomsNumLabel.display(len(Pomo.get_all_task_dicts(streamerUsername)))
-            except Exception as e:
-                logger.log(logging.ERROR, PomoBotUi.format_exception(e))
-                print(PomoBotUi.format_exception(e))
-            QtCore.QThread.sleep(5)
+    def monitorPomos(self):
+        try:
+            self.pomsNumLabel.display(
+                len(Pomo.get_active_timer_dicts(self.botConfig.streamerUsername)) +
+                len(Pomo.get_active_task_dicts(self.botConfig.streamerUsername))
+            )
+        except Exception as e:
+            logger.log(logging.ERROR, PomoBotUi.format_exception(e))
+            print(PomoBotUi.format_exception(e))
 
 
 try:

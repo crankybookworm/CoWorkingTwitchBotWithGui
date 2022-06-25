@@ -14,21 +14,15 @@ import os
 import pytz
 import asyncio
 
-# Use File Storage if on Replit. Otherwise use memory storage.
-try:
-    import replit
-    
-    filepath = "BotResources/resources/botDatabase.json"
-    if not os.path.exists(filepath.rsplit('/', 1)[0]):
-        os.makedirs(filepath.rsplit('/', 1)[0])
+filepath = "BotResources/resources/botDatabase.json"
+if not os.path.exists(filepath.rsplit('/', 1)[0]):
+    os.makedirs(filepath.rsplit('/', 1)[0])
 
-    if(not os.path.exists(filepath)):
-        with open(filepath, 'w') as f:
-            pass
+if(not os.path.exists(filepath)):
+    with open(filepath, 'w') as f:
+        pass
 
-    db = TinyDB(filepath, sort_keys=True, indent=4, )
-except ImportError:
-    db = TinyDB(storage=MemoryStorage)
+db = TinyDB(filepath, sort_keys=True, indent=4, )
 
 
 
