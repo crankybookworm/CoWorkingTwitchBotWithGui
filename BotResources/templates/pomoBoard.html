@@ -12,40 +12,8 @@
     </table>
     <div style="visibility: hidden">
         <table>
-            <tr class="timer" id="timerTemplate">
-                <td class="col1">
-                    <span class="timeLeft">
-                        Tick or timeLeft
-                    </span>
-                </td>
-                <td class="col2">
-                    <span class="username">
-                        userDisplayName
-                    </span>
-                    <span class="work">
-                        work
-                    </span>
-                    <span class="iterations">
-                        (x of y)
-                    </span>
-                </td>
-            </tr>
-            <tr class="task" id="taskTemplate">
-                <td class="col1">
-                    <input class="done" type="checkbox" />
-                </td>
-                <td class="col2">
-                    <span class="username">
-                        userDisplayName
-                    </span>
-                    <span class="work">
-                        work
-                    </span>
-                    <span class="timeTaken">
-                        x
-                    </span>
-                </td>
-            </tr>
+            {% include 'taskTemplate.html' %}
+            {% include 'pomoTemplate.html' %}
         </table>
     </div>
 
@@ -53,6 +21,8 @@
         $(function() {
 
             // Fetch the board
+            var numOfFails = 0;
+
             function fetchBoard() {
                 $.ajax({
                     type: 'GET',
@@ -68,32 +38,29 @@
                         }
                         jsonData.forEach(function(task, index, myArray) {
                             if (task.iterations !== undefined) {
-                                let timerTemplate = document.getElementById(
-                                    "timerTemplate");
+                                let pomoTemplate = document.getElementById(
+                                    "pomoTemplate");
 
-                                var timerRow = timerTemplate.cloneNode(true);
+                                var timerRow = pomoTemplate.cloneNode(true);
                                 timerRow.id = task.username
 
-                                timerRow.querySelector(".timeLeft").textContent = Math
+                                timerRow.innerHTML = timerRow.innerHTML.replace('{timeLeft}', Math
                                     .round((Date.parse(task
-                                        .iterEndTime + 'Z') - new Date().getTime()) / 60 / 1000);
+                                        .iterEndTime + 'Z') - new Date().getTime()) / 60 / 1000));
 
-                                timerRow.querySelector(".username").textContent = task
-                                    .userDisplayName;
+                                timerRow.innerHTML = timerRow.innerHTML.replace('{username}', task.userDisplayName);
 
                                 if (task.workMode) {
-                                    timerRow.querySelector(".work").textContent = task.work;
+                                    timerRow.innerHTML = timerRow.innerHTML.replace('{work}', task.work);
                                 } else {
-                                    timerRow.querySelector(".work").textContent = "relax!";
+                                    timerRow.innerHTML = timerRow.innerHTML.replace('{work}', "relax!");
                                 }
 
                                 if (task.iterations > 1) {
-                                    timerRow.querySelector(".iterations").textContent =
-                                        "(" +
-                                        task.currentIteration + " of " + task.iterations +
-                                        " )";
+                                    timerRow.innerHTML = timerRow.innerHTML.replace('{currentIteration}', task.currentIteration);
+                                    timerRow.innerHTML = timerRow.innerHTML.replace('{iterations}', task.iterations);
                                 } else {
-                                    timerRow.querySelector(".iterations").textContent = "";
+                                    timerRow.querySelector(".iterations").innerHTML = timerRow.querySelector(".iterations").innerHTML = "";
                                 }
 
                                 $("#board").append(timerRow);
@@ -107,25 +74,30 @@
                                 if (task.done) {
                                     taskRow.id = task.username+"_done_"+index;
                                     taskRow.className += " completed";
-                                    taskRow.querySelector(".done").setAttribute('checked', true);
-                                    taskRow.querySelector(".timeTaken").textContent = Math
-                                        .round((Date.parse(task.endTime + 'Z') - Date.parse(
-                                            task.startTime + 'Z')) / 60 / 1000);
+                                    taskRow.innerHTML = taskRow.innerHTML.replace('{timeTaken}', Math
+                                    .round((Date.parse(task.endTime + 'Z') - Date.parse(
+                                        task.startTime + 'Z')) / 60 / 1000));
                                 } else {
-                                    taskRow.querySelector(".timeTaken").textContent = "";
+                                    taskRow.querySelector(".done").setAttribute('hidden', true);
+                                    taskRow.innerHTML = taskRow.innerHTML.replace('{timeTaken}', "");
                                 }
 
-                                taskRow.querySelector(".username").textContent = task
-                                    .userDisplayName;
+                                taskRow.innerHTML = taskRow.innerHTML.replace('{username}', task
+                                    .userDisplayName);
 
-                                taskRow.querySelector(".work").textContent = task.work;
+                                taskRow.innerHTML = taskRow.innerHTML.replace('{work}', task.work);
                                 $("#board").append(taskRow);
                             }
+                            numOfFails = 0;
                         });
                     },
                     error: function(){
-                        $("#board").empty();
-                        $("#board").append("Failed to get Data.\nPlease check if bot is working and data is valid");
+                        if(numOfFails>5){
+                            $("#board").empty();
+                            $("#board").append("Failed to get Data.\nPlease check if bot is working and data is valid");
+                        }else{
+                            numOfFails++;
+                        }
                     }
                 })
             }
@@ -135,23 +107,29 @@
 
             // Automatic Scroll
             var direction = 'd';
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
 
-            function scrollUpAndDown() {
+            async function scrollUpAndDown() {
                 if (direction == 'd') {
                     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
                         direction = 'u';
+                        await sleep(2000);
                     } else {
                         window.scroll(0, window.pageYOffset + 5);
                     }
                 } else {
                     if (window.pageYOffset == 0) {
                         direction = 'd';
+                        await sleep(2000);
                     } else {
                         window.scroll(0, window.pageYOffset - 5);
                     }
                 }
+                scrollUpAndDown();
             }
-            setInterval(scrollUpAndDown, 100);
+            scrollUpAndDown()
         });
     </script>
 </body>

@@ -292,7 +292,7 @@ class WorkingUser():
         self.username = username
         self.userDisplayName = userDisplayName if userDisplayName else username
         if(totalWorkTime):
-            if(type(totalWorkTime) is float or int):
+            if(type(totalWorkTime) is float or type(totalWorkTime) is int):
                 self.totalWorkTime = datetime.timedelta(seconds=totalWorkTime)
             elif(type(totalWorkTime) is datetime.timedelta):
                 self.totalWorkTime = totalWorkTime
@@ -777,7 +777,7 @@ class Pomo():
             totalWorkTime = datetime.timedelta(seconds=doc.get("totalWorkTime"))
             if(type(item) is datetime.timedelta):
                 totalWorkTime += item
-            elif(type(item) is float or int):
+            elif(type(item) is float or type(item) is int):
                 totalWorkTime += datetime.timedelta(minutes=item)
             elif(type(item) is Task):
                 totalWorkTime += item.timeTaken

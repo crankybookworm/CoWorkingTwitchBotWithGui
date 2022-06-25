@@ -1,0 +1,20 @@
+{% block body %}
+    <tr class="timer" id="pomoTemplate">
+        <td class="col1">
+            <span class="timeLeft">
+                {timeLeft}
+            </span>
+        </td>
+        <td class="col2">
+            <span class="username">
+                {username}
+            </span>
+            <span class="work">
+                {work}
+            </span>
+            <span class="iterations" title="This is removed if iterations is 1">
+                ({currentIteration} of {iterations})
+            </span>
+        </td>
+    </tr>
+{% endblock %}

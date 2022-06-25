@@ -241,7 +241,6 @@ class CoWorkingBot(Bot):
                         work: str = '',
                         ) -> None:
 
-        timer = Pomo.get_timer(channel, user)
         if (Pomo.has_active_timer(channel, user)):
             await self.addTask(ctx)
             return

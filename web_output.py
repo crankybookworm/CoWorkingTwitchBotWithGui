@@ -99,6 +99,7 @@ def runWebOutput(host='0.0.0.0', port=8080):
     app.config.from_mapping({
         "ENV": "development", 
         "TESTING": True,
+        'TEMPLATES_AUTO_RELOAD': True,
     })
     app.run(host=host, port=port)
 

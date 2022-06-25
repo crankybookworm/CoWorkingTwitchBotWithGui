@@ -1,23 +1,26 @@
 import asyncio
 import json
-from multiprocessing import Process
-from time import sleep
-from unittest.mock import Mock
 import webbrowser
 import PyQt5
 from PyQt5 import QtWidgets, uic, QtGui, QtCore
 import sys
 import traceback
+import os
+from twitchio.http import TwitchHTTP
+import logging
+
+try:
+    from PyQt5.QtWebEngineWidgets import QWebEngineView
+except (ImportError, ValueError):
+    QWebEngineView = None
+
+# Local Imports
 from bot import CoWorkingBot, startBot, stopBot
 from pomo_logic import Pomo
 from file_output import startFileOutput, stopFileOutput
 from web_output import startWebOutput, stopWebOutput
-import os
-from twitchio.http import TwitchHTTP
-
 from bot_config import BotConfig
 from chatbot_config import ChatBotConfig
-import logging
 
 logging.basicConfig(filename='BotResources/bot.log', level=logging.ERROR)
 logger = logging.getLogger(__name__)
@@ -26,7 +29,7 @@ basedir = os.path.dirname(__file__)
 
 try:
     from ctypes import windll  # Only exists on Windows.
-    myappid = u'CrankyLibrary.Bot.CoWorkingTwitch.0.1'
+    myappid = u'CrankyLibrary.Bot.CoWorkingTwitch.0.2.0'
     windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 except ImportError as e:
     pass
@@ -58,6 +61,13 @@ class PomoBotUi(QtWidgets.QMainWindow):
         if(self.chatBotConfig.getText("helloResponse") is not None):
             self.resetChatBotConfig()
 
+        if(os.path.exists("BotResources/templates/pomoTemplate.html")):
+            self.resetPomoHtmlConfig()
+        if(os.path.exists("BotResources/templates/taskTemplate.html")):
+            self.resetTaskHtmlConfig()
+        if(os.path.exists("BotResources/static/styles/pomoBoard.css")):
+            self.resetBoardCssConfig()
+
         self.show()
 
     def setUpButtons(self):
@@ -66,6 +76,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
         self.SetupsCheckboxesOnBotSettings()
         self.SetupsEntriesOnBotSettings()
         self.SetupEntriesOnChatBotConfig()
+        self.SetupEntriesOnWebOutputConfig()
 
 
     def SetupStatusOnControl(self):
@@ -156,6 +167,11 @@ class PomoBotUi(QtWidgets.QMainWindow):
         ).findChild(QtWidgets.QCheckBox, "fileOutputCheck")
         self.webOutputCheck: QtWidgets.QCheckBox = self.window(
         ).findChild(QtWidgets.QCheckBox, "webOutputCheck")
+
+        webOutputTab: QtWidgets.QTabWidget = self.window(
+        ).findChild(QtWidgets.QTabWidget, "tabWidget")
+
+        self.webOutputCheck.stateChanged.connect(lambda x: webOutputTab.setTabVisible(3, bool(x)))
 
 
     def SetupsEntriesOnBotSettings(self):
@@ -271,6 +287,62 @@ class PomoBotUi(QtWidgets.QMainWindow):
         ).findChild(QtWidgets.QPlainTextEdit, "rmvDoneUserNumFail")
         
 
+    def SetupEntriesOnWebOutputConfig(self):
+        self.pomoHtml: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "pomoHtml")
+        self.pomoHtml.textChanged.connect(self.reloadWebView)
+        self.taskHtml: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "taskHtml")
+        self.taskHtml.textChanged.connect(self.reloadWebView)
+        self.boardCss: QtWidgets.QPlainTextEdit = self.window(
+        ).findChild(QtWidgets.QPlainTextEdit, "boardCss")
+        self.boardCss.textChanged.connect(self.reloadWebView)
+
+        # Save Button on Web Output Settings
+        saveWebOutputs: QtWidgets.QPushButton = self.window().findChild(
+            QtWidgets.QDialogButtonBox, "saveOrResetWebOutputs").children()[1]
+        saveWebOutputs.clicked.connect(self.saveWebOutputConfig)
+
+        # Reset Button on Web Output Settings
+        resetWebOutputs: QtWidgets.QPushButton = self.window().findChild(
+            QtWidgets.QDialogButtonBox, "saveOrResetWebOutputs").children()[2]
+        resetWebOutputs.clicked.connect(self.resetWebOutputConfig)
+
+        webView: QtWidgets.QWidget = self.window(
+        ).findChild(QtWidgets.QWidget, "webView")
+
+        if(QWebEngineView):
+            self.webOutputView = QWebEngineView(webView)
+            verticalLayoutWebView: QtWidgets.QVBoxLayout = self.window(
+            ).findChild(QtWidgets.QVBoxLayout, "verticalLayoutWebView")
+            verticalLayoutWebView.addWidget(self.webOutputView)
+            self.reloadWebView()
+        else:
+            webOutputTabWidget: QtWidgets.QTabWidget = self.window(
+            ).findChild(QtWidgets.QTabWidget, "webOutputTabWidget")
+            webOutputTabWidget.setTabVisible(3, False)
+            self.webOutputView = None
+            
+
+    def reloadWebView(self):
+        if(self.webOutputView):
+            self.webOutputView.setHtml(
+                    "<head><style>" +
+                    self.boardCss.toPlainText() +
+                    "</style></head><body>" +
+                    """
+                    <table class='table table-bordered table-striped table-responsive-stack' id='tableOne'>
+                        <thead class='thead-dark'><th>{{tableTitle}}</th></thead>
+                        <tbody id='board' class='board'>
+                    """ +
+                            self.pomoHtml.toPlainText() +
+                            self.taskHtml.toPlainText() +
+                    """
+                        </tbody>
+                    </table>
+                    """
+                )
+
     def raiseError(self, error):
         error_dialog = QtWidgets.QErrorMessage(self.window())
         error_dialog.showMessage(error)
@@ -328,7 +400,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
                 self.raiseError(errorMsg)
                 return
 
-            with open("BotResources/resources/botConfig.json", 'w') as f:
+            with open("BotResources/resources/botConfig.json", 'w', encoding="utf-8") as f:
                 f.write(json.dumps(self.botConfig.__dict__,
                     default=str, sort_keys=True, indent=4))
         except Exception as e:
@@ -416,7 +488,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
                 rmvDoneUserNumFail=self.rmvDoneUserNumFail.toPlainText(),
             )
 
-            with open("BotResources/resources/chatBotConfig.json", 'w') as f:
+            with open("BotResources/resources/chatBotConfig.json", 'w', encoding="utf-8") as f:
                 f.write(json.dumps(self.chatBotConfig.__dict__,
                     default=str, sort_keys=True, indent=4))
         except Exception as e:
@@ -481,6 +553,64 @@ class PomoBotUi(QtWidgets.QMainWindow):
         except Exception as e:
             logger.log(logging.ERROR, "Error stopping bot: %s", PomoBotUi.format_exception(e))
             self.raiseError(PomoBotUi.format_exception(e))
+
+    def saveWebOutputConfig(self):
+        self.savePomoHtmlConfig()
+        self.saveTaskHtmlConfig()
+        self.saveBoardCssConfig()
+
+    def savePomoHtmlConfig(self):
+        try:
+            with open("BotResources/templates/pomoTemplate.html", 'w', encoding="utf-8") as f:
+                f.write("{% block body %}\n"+ self.pomoHtml.toPlainText() + "\n{% endblock %}")
+        except Exception as e:
+            logger.log(logging.ERROR, "Error Saving pomoBoard.css %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error Saving pomoTemplate.html:\n%s" % PomoBotUi.format_exception(e))
+
+    def saveTaskHtmlConfig(self):
+        try:
+            with open("BotResources/templates/taskTemplate.html", 'w', encoding="utf-8") as f:
+                f.write("{% block body %}\n"+ self.taskHtml.toPlainText() + "\n{% endblock %}")
+        except Exception as e:
+            logger.log(logging.ERROR, "Error Saving taskTemplate.html %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error Saving taskTemplate.html:\n%s" % PomoBotUi.format_exception(e))
+
+    def saveBoardCssConfig(self):
+        try:
+            with open("BotResources/static/styles/pomoBoard.css", 'w', encoding="utf-8") as f:
+                f.write("{% block body %}\n"+ self.boardCss.toPlainText() + "\n{% endblock %}")
+        except Exception as e:
+            logger.log(logging.ERROR, "Error Saving pomoBoard.css %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error Saving pomoBoard.css:\n%s" % PomoBotUi.format_exception(e))
+
+    def resetWebOutputConfig(self):
+        self.resetPomoHtmlConfig()
+        self.resetTaskHtmlConfig()
+        self.resetBoardCssConfig()
+
+    def resetPomoHtmlConfig(self):
+        try:
+            with open("BotResources/templates/pomoTemplate.html", 'r', encoding="utf-8") as f:
+                self.pomoHtml.setPlainText(f.read().removeprefix("{% block body %}\n").removesuffix("\n{% endblock %}"))
+        except Exception as e:
+            logger.log(logging.ERROR, "Error Reseting pomoTemplate.html %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error Reseting pomoTemplate.html:\n%s" % PomoBotUi.format_exception(e))
+
+    def resetTaskHtmlConfig(self):
+        try:
+            with open("BotResources/templates/taskTemplate.html", 'r', encoding="utf-8") as f:
+                self.taskHtml.setPlainText(f.read().removeprefix("{% block body %}\n").removesuffix("\n{% endblock %}"))
+        except Exception as e:
+            logger.log(logging.ERROR, "Error Reseting taskTemplate.html %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error Reseting taskTemplate.html:\n%s" % PomoBotUi.format_exception(e))
+
+    def resetBoardCssConfig(self):
+        try:
+            with open("BotResources/static/styles/pomoBoard.css", 'r', encoding="utf-8") as f:
+                self.boardCss.setPlainText(f.read().removeprefix("{% block body %}\n").removesuffix("\n{% endblock %}"))
+        except Exception as e:
+            logger.log(logging.ERROR, "Error Reseting pomoBoard.css %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error Reseting pomoBoard.css:\n%s" % PomoBotUi.format_exception(e))
 
     @staticmethod
     def format_exception(e):
