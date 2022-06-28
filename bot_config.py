@@ -133,24 +133,24 @@ class BotConfig():
         self.oAuthToken = oAuthToken
         self.streamerUsername = streamerUsername
 
-        self.helloCmdEnabled = helloCmdEnabled if helloCmdEnabled else self.helloCmdEnabled
-        self.pomoCmdEnabled = pomoCmdEnabled if pomoCmdEnabled else self.pomoCmdEnabled
-        self.timerCmdEnabled = timerCmdEnabled if timerCmdEnabled else self.timerCmdEnabled
-        self.grindersCmdEnabled = grindersCmdEnabled if grindersCmdEnabled else self.grindersCmdEnabled
-        self.sleepersCmdEnabled = sleepersCmdEnabled if sleepersCmdEnabled else self.sleepersCmdEnabled
-        self.taskCmdEnabled = taskCmdEnabled if taskCmdEnabled else self.taskCmdEnabled
-        self.doneCmdEnabled = doneCmdEnabled if doneCmdEnabled else self.doneCmdEnabled
-        self.finishCmdEnabled = finishCmdEnabled if finishCmdEnabled else self.finishCmdEnabled
-        self.rmvTaskCmdEnabled = rmvTaskCmdEnabled if rmvTaskCmdEnabled else self.rmvTaskCmdEnabled
-        self.rmvDoneCmdEnabled = rmvDoneCmdEnabled if rmvDoneCmdEnabled else self.rmvDoneCmdEnabled
-        self.flipCmdEnabled = flipCmdEnabled if flipCmdEnabled else self.flipCmdEnabled
-        self.unflipCmdEnabled = unflipCmdEnabled if unflipCmdEnabled else self.unflipCmdEnabled
-        self.joinCmdEnabled = joinCmdEnabled if joinCmdEnabled else self.joinCmdEnabled
-        self.leaveCmdEnabled = leaveCmdEnabled if leaveCmdEnabled else self.leaveCmdEnabled
+        self.helloCmdEnabled = helloCmdEnabled if helloCmdEnabled is not None else self.helloCmdEnabled
+        self.pomoCmdEnabled = pomoCmdEnabled if pomoCmdEnabled is not None else self.pomoCmdEnabled
+        self.timerCmdEnabled = timerCmdEnabled if timerCmdEnabled is not None else self.timerCmdEnabled
+        self.grindersCmdEnabled = grindersCmdEnabled if grindersCmdEnabled is not None else self.grindersCmdEnabled
+        self.sleepersCmdEnabled = sleepersCmdEnabled if sleepersCmdEnabled is not None else self.sleepersCmdEnabled
+        self.taskCmdEnabled = taskCmdEnabled if taskCmdEnabled is not None else self.taskCmdEnabled
+        self.doneCmdEnabled = doneCmdEnabled if doneCmdEnabled is not None else self.doneCmdEnabled
+        self.finishCmdEnabled = finishCmdEnabled if finishCmdEnabled is not None else self.finishCmdEnabled
+        self.rmvTaskCmdEnabled = rmvTaskCmdEnabled if rmvTaskCmdEnabled is not None else self.rmvTaskCmdEnabled
+        self.rmvDoneCmdEnabled = rmvDoneCmdEnabled if rmvDoneCmdEnabled is not None else self.rmvDoneCmdEnabled
+        self.flipCmdEnabled = flipCmdEnabled if flipCmdEnabled is not None else self.flipCmdEnabled
+        self.unflipCmdEnabled = unflipCmdEnabled if unflipCmdEnabled is not None else self.unflipCmdEnabled
+        self.joinCmdEnabled = joinCmdEnabled if joinCmdEnabled is not None else self.joinCmdEnabled
+        self.leaveCmdEnabled = leaveCmdEnabled if leaveCmdEnabled is not None else self.leaveCmdEnabled
 
-        self.fileOutputEnabled = fileOutputEnabled if fileOutputEnabled else self.fileOutputEnabled
+        self.fileOutputEnabled = fileOutputEnabled if fileOutputEnabled is not None else self.fileOutputEnabled
 
-        self.webOutputEnabled = webOutputEnabled if webOutputEnabled else self.webOutputEnabled
+        self.webOutputEnabled = webOutputEnabled if webOutputEnabled is not None else self.webOutputEnabled
 
 
 if __name__ == '__main__':

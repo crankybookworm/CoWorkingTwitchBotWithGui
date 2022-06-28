@@ -167,6 +167,8 @@ class PomoBotUi(QtWidgets.QMainWindow):
 
     def setupsCheckboxesOnBotSettings(self):
         # Setups Checkboxes on Bot Settings
+        self.helloCheck: QtWidgets.QCheckBox = self.window(
+        ).findChild(QtWidgets.QCheckBox, "helloCheck")
         self.pomoCheck: QtWidgets.QCheckBox = self.window(
         ).findChild(QtWidgets.QCheckBox, "pomoCheck")
         self.timerCheck: QtWidgets.QCheckBox = self.window(
@@ -388,15 +390,15 @@ class PomoBotUi(QtWidgets.QMainWindow):
             else:
                 self.raiseError("Invalid Path")
         except Exception as e:
-            logger.log(logging.ERROR, "Error stopping bot: %s", PomoBotUi.format_exception(e))
-            self.raiseError(PomoBotUi.format_exception(e))
+            logger.log(logging.ERROR, "Error opening File Browser:\n %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error opening File Browser:\n %s" % PomoBotUi.format_exception(e))
 
     def openTokenLink(self):
         try:
             webbrowser.open("https://twitchtokengenerator.com")
         except Exception as e:
-            logger.log(logging.ERROR, "Error stopping bot: %s", PomoBotUi.format_exception(e))
-            self.raiseError(PomoBotUi.format_exception(e))
+            logger.log(logging.ERROR, "Error opening link:\n %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error opening link:\n %s" % PomoBotUi.format_exception(e))
 
     def saveBotConfig(self):
         try:
@@ -405,6 +407,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
                 oAuthToken=self.oAuthEntry.text(),
                 streamerUsername=self.streamerUsernameEntry.text(),
 
+                helloCmdEnabled=self.helloCheck.isChecked(),
                 pomoCmdEnabled=self.pomoCheck.isChecked(),
                 timerCmdEnabled=self.timerCheck.isChecked(),
                 grindersCmdEnabled=self.grindersCheck.isChecked(),
@@ -432,11 +435,11 @@ class PomoBotUi(QtWidgets.QMainWindow):
                 return
 
             with open("BotResources/resources/botConfig.json", 'w', encoding="utf-8") as f:
-                f.write(json.dumps(self.botConfig.__dict__,
-                    default=str, sort_keys=True, indent=4))
+                json.dump(self.botConfig.__dict__, f,
+                    default=str, sort_keys=True, indent=4)
         except Exception as e:
-            logger.log(logging.ERROR, "Error stopping bot: %s", PomoBotUi.format_exception(e))
-            self.raiseError(PomoBotUi.format_exception(e))
+            logger.log(logging.ERROR, "Error saving botConfig:\n %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error saving botConfig:\n %s" % PomoBotUi.format_exception(e))
 
     def resetBotConfig(self):
         try:
@@ -444,6 +447,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
             self.oAuthEntry.setText(self.botConfig.oAuthToken)
             self.streamerUsernameEntry.setText(self.botConfig.streamerUsername)
 
+            self.helloCheck.setChecked(self.botConfig.helloCmdEnabled)
             self.pomoCheck.setChecked(self.botConfig.pomoCmdEnabled)
             self.timerCheck.setChecked(self.botConfig.timerCmdEnabled)
             self.grindersCheck.setChecked(self.botConfig.grindersCmdEnabled)
@@ -465,8 +469,8 @@ class PomoBotUi(QtWidgets.QMainWindow):
             self.webHostEntry.setText(self.botConfig.webOutputHost)
             self.webPortEntry.setText(str(self.botConfig.webOutputPort))
         except Exception as e:
-            logger.log(logging.ERROR, "Error stopping bot: %s", PomoBotUi.format_exception(e))
-            self.raiseError(PomoBotUi.format_exception(e))
+            logger.log(logging.ERROR, "Error reseting botConfig:\n %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error reseting botConfig:\n %s" % PomoBotUi.format_exception(e))
 
     def saveChatBotConfig(self):
         try:
@@ -520,11 +524,11 @@ class PomoBotUi(QtWidgets.QMainWindow):
             )
 
             with open("BotResources/resources/chatBotConfig.json", 'w', encoding="utf-8") as f:
-                f.write(json.dumps(self.chatBotConfig.__dict__,
-                    default=str, sort_keys=True, indent=4))
+                json.dump(self.chatBotConfig.__dict__, f, 
+                    default=str, sort_keys=True, indent=4)
         except Exception as e:
-            logger.log(logging.ERROR, "Error stopping bot: %s", PomoBotUi.format_exception(e))
-            self.raiseError(PomoBotUi.format_exception(e))
+            logger.log(logging.ERROR, "Error saving chatBotConfig:\n %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error saving chatBotConfig:\n %s" % PomoBotUi.format_exception(e))
 
     def resetChatBotConfig(self):
         try:
@@ -582,8 +586,8 @@ class PomoBotUi(QtWidgets.QMainWindow):
             self.rmvDoneUserNum.setPlainText(self.chatBotConfig.rmvDoneUserNum)
             self.rmvDoneUserNumFail.setPlainText(self.chatBotConfig.rmvDoneUserNumFail)
         except Exception as e:
-            logger.log(logging.ERROR, "Error stopping bot: %s", PomoBotUi.format_exception(e))
-            self.raiseError(PomoBotUi.format_exception(e))
+            logger.log(logging.ERROR, "Error reseting ChatBotConfig:\n %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error reseting ChatBotConfig:\n %s" % PomoBotUi.format_exception(e))
 
     def saveWebOutputConfig(self):
         self.savePomoHtmlConfig()
@@ -595,8 +599,8 @@ class PomoBotUi(QtWidgets.QMainWindow):
             with open("BotResources/templates/pomoTemplate.html", 'w', encoding="utf-8") as f:
                 f.write("{% block body %}\n"+ self.pomoHtml.toPlainText() + "\n{% endblock %}")
         except Exception as e:
-            logger.log(logging.ERROR, "Error Saving pomoBoard.css %s", PomoBotUi.format_exception(e))
-            self.raiseError("Error Saving pomoTemplate.html:\n%s" % PomoBotUi.format_exception(e))
+            logger.log(logging.ERROR, "Error Saving pomoTemplate.html %s", PomoBotUi.format_exception(e))
+            self.raiseError("Error Saving pomoTemplate.html:\n %s" % PomoBotUi.format_exception(e))
 
     def saveTaskHtmlConfig(self):
         try:
@@ -609,7 +613,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
     def saveBoardCssConfig(self):
         try:
             with open("BotResources/static/styles/pomoBoard.css", 'w', encoding="utf-8") as f:
-                f.write("{% block body %}\n"+ self.boardCss.toPlainText() + "\n{% endblock %}")
+                f.write(self.boardCss.toPlainText())
         except Exception as e:
             logger.log(logging.ERROR, "Error Saving pomoBoard.css %s", PomoBotUi.format_exception(e))
             self.raiseError("Error Saving pomoBoard.css:\n%s" % PomoBotUi.format_exception(e))
@@ -638,7 +642,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
     def resetBoardCssConfig(self):
         try:
             with open("BotResources/static/styles/pomoBoard.css", 'r', encoding="utf-8") as f:
-                self.boardCss.setPlainText(f.read().removeprefix("{% block body %}\n").removesuffix("\n{% endblock %}"))
+                self.boardCss.setPlainText(f.read())
         except Exception as e:
             logger.log(logging.ERROR, "Error Reseting pomoBoard.css %s", PomoBotUi.format_exception(e))
             self.raiseError("Error Reseting pomoBoard.css:\n%s" % PomoBotUi.format_exception(e))
@@ -735,8 +739,8 @@ class PomoBotUi(QtWidgets.QMainWindow):
 
             return True
         except Exception as e:
-            logger.log(logging.ERROR, "Error starting bot: %s", PomoBotUi.format_exception(e))
-            self.botTriggerError.setText(str(e))
+            logger.log(logging.ERROR, "Error starting bot:\n %s", PomoBotUi.format_exception(e))
+            self.botTriggerError.setText("Error starting bot: %s" % str(e))
             self.botTriggerError.setVisible(True)
             return False
 
@@ -748,8 +752,9 @@ class PomoBotUi(QtWidgets.QMainWindow):
             except AttributeError:
                 self.webOutputThread = None
             except Exception as e:
-                logger.log(logging.ERROR, "Error stopping WebOutput: %s", PomoBotUi.format_exception(e))
-                self.raiseError(PomoBotUi.format_exception(e))
+                logger.log(logging.ERROR, "Error stopping WebOutput:\n %s", PomoBotUi.format_exception(e))
+                self.botTriggerError.setText("Error stopping WebOutput: %s" % str(e))
+                self.botTriggerError.setVisible(True)
             finally:
                 self.pomoBrdStsLabel.setText("OFF")
 
@@ -760,32 +765,25 @@ class PomoBotUi(QtWidgets.QMainWindow):
             except AttributeError:
                 self.fileOutputThread = None
             except Exception as e:
-                logger.log(logging.ERROR, "Error stopping FileOutput: %s", PomoBotUi.format_exception(e))
-                self.raiseError("Error stopping FileOutput: %s" % PomoBotUi.format_exception(e))
+                logger.log(logging.ERROR, "Error stopping FileOutput:\n %s", PomoBotUi.format_exception(e))
+                self.botTriggerError.setText("Error stopping FileOutput: %s" % str(e))
+                self.botTriggerError.setVisible(True)
             finally:
                 self.pomoBrdStsLabel.setText("OFF")
-        
-        if(self.pomoMonitorThread):
-            try:
-                self.pomoMonitorThread.stop()
-                self.pomoMonitorThread = None
-            except AttributeError:
-                self.pomoMonitorThread = None
-            except Exception as e:
-                logger.log(logging.ERROR, "Error stopping PomoMonitor: %s", PomoBotUi.format_exception(e))
-                self.raiseError(PomoBotUi.format_exception(e))
 
         try:
             stopBot(self.bot, self.botThread)
             
             return True
         except AttributeError as e:
-            logger.log(logging.ERROR, "Error stopping bot: %s", PomoBotUi.format_exception(e))
-            self.raiseError("Bot Not Running")
+            logger.log(logging.ERROR, "Error stopping bot:\n %s", PomoBotUi.format_exception(e))
+            self.botTriggerError.setText("Bot Not Running")
+            self.botTriggerError.setVisible(True)
             return True
         except Exception as e:
-            logger.log(logging.ERROR, "Error stopping bot: %s", PomoBotUi.format_exception(e))
-            self.raiseError(PomoBotUi.format_exception(e))
+            logger.log(logging.ERROR, "Error stopping bot:\n %s", PomoBotUi.format_exception(e))
+            self.botTriggerError.setText("Error stopping bot: %s" % str(e))
+            self.botTriggerError.setVisible(True)
             return False
 
     def monitorPomos(self):
@@ -805,9 +803,11 @@ try:
 
     try:
         botConfig = BotConfig.loadFromFile('BotResources/resources/botConfig.json')
-        chatBotConfig = ChatBotConfig.loadFromFile('BotResources/resources/chatBotConfig.json')
     except FileNotFoundError:
         botConfig = BotConfig()
+    try:
+        chatBotConfig = ChatBotConfig.loadFromFile('BotResources/resources/chatBotConfig.json')
+    except FileNotFoundError:
         chatBotConfig = ChatBotConfig()
 
     botUI = PomoBotUi(botConfig, chatBotConfig)
