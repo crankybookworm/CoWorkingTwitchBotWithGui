@@ -1,16 +1,20 @@
 import json
 from flask import Flask, redirect, url_for, request, render_template
 from pomo_logic import Pomo, Thread_With_Exception
+import os, sys
 # from replit import db
 
 app = Flask(__name__)
 
-# config file has STATIC_FOLDER='/core/static'
-# app.static_url_path="BotResources/static"
-app.template_folder="BotResources/templates"
+template_folder="BotResources/templates"
+static_folder="BotResources/static"
 
-# set the absolute path to the static folder
-app.static_folder="BotResources/static"
+if getattr(sys, 'frozen', False):
+    template_folder = os.path.join(sys.executable, '..', template_folder)
+    static_folder = os.path.join(sys.executable, '..', static_folder)
+
+app.template_folder = template_folder
+app.static_folder = static_folder
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
@@ -97,8 +101,6 @@ def pomoDoneTasks(channel: str):
 
 def runWebOutput(host='0.0.0.0', port=8080):
     app.config.from_mapping({
-        "ENV": "development", 
-        "TESTING": True,
         'TEMPLATES_AUTO_RELOAD': True,
     })
     app.run(host=host, port=port)

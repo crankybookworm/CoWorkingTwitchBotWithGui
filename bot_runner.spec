@@ -7,7 +7,7 @@ a = Analysis(['bot_runner.py'],
     pathex = ['D:/Development/Python/PomoBot/pomoenv/Lib/site-packages'],
     binaries = [],
     datas = [
-        ('BotResources', 'BotResources')
+        ('BotResources', 'BotResources'),
     ],
     hiddenimports = [],
     hookspath = [],
@@ -39,5 +39,5 @@ exe = EXE(pyz,
         codesign_identity=None,
         entitlements_file=None,
         console = False,
-        # icon='BotResources/static/images/CoWorkingBotIcon.png'
+        icon='BotResources/static/images/CoWorkingBotIcon.ico',
     )

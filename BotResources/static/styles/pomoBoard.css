@@ -3,7 +3,6 @@
 thead>tr {
     border-radius: 1em 1em 0em 0em;
     border: solid;
-    background-color: lightblue;
     font-weight: bold;
     text-align: center;
 }
@@ -45,6 +44,10 @@ table {
 tr {
     border-right: solid;
     border-left: solid;
+}
+
+thead>tr {
+    background-color: lightblue;
 }
 
 tbody>tr:nth-child(odd) {
