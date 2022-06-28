@@ -25,8 +25,8 @@ More details:
 
 [![Run on Repl.it](https://repl.it/badge/github/crankybookworm/CoWorkingTwitchBotWithGui)](https://repl.it/github/crankybookworm/CoWorkingTwitchBotWithGui)
 1) Create an account for the Bot
-2) Create an application in the bot account using <a href="https://dev.twitch.tv/console">twitch.tv dev console</a> (you will need to activate 2FA for this). Set the URL to "https://twitchapps.com/tmi/"
-3) Use the <a href="https://twitchapps.com/tmi/">token generator link</a> to generate an Auth token.
+2) Create an application in the bot account using <a href="https://dev.twitch.tv/console">twitch.tv dev console</a> (you will need to activate 2FA for this). Set the URL to "https://twitchtokengenerator.com"
+3) Use the <a href="https://twitchtokengenerator.com">token generator link</a> to generate an Auth token.
 4) Create a Replit Account
 5) Fork this <a href="https://replit.com/@CrankyBookworm/CoWorkingTwitchBotWithGui?v=1">Repl</a>
 6) Set the Environment Variables from the left hand bar of Repl (set the "AUTH_TOKEN" to the auth token you get from Step 3 and "USER_NAME" to your stream account username)

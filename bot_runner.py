@@ -393,7 +393,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
 
     def openTokenLink(self):
         try:
-            webbrowser.open("https://twitchapps.com/tmi/")
+            webbrowser.open("https://twitchtokengenerator.com")
         except Exception as e:
             logger.log(logging.ERROR, "Error stopping bot: %s", PomoBotUi.format_exception(e))
             self.raiseError(PomoBotUi.format_exception(e))

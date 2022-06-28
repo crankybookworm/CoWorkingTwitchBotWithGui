@@ -78,6 +78,7 @@
                                     .round((Date.parse(task.endTime + 'Z') - Date.parse(
                                         task.startTime + 'Z')) / 60 / 1000));
                                 } else {
+                                    taskRow.id = task.username;
                                     taskRow.querySelector(".done").setAttribute('hidden', true);
                                     taskRow.innerHTML = taskRow.innerHTML.replace('{timeTaken}', "");
                                 }
