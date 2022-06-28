@@ -2135,8 +2135,23 @@ tbody&gt;tr:last-child {
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuMenu">
+    <property name="title">
+     <string>Menu</string>
+    </property>
+    <addaction name="minimizeToTrayCheck"/>
+   </widget>
+   <addaction name="menuMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="minimizeToTrayCheck">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Minimize to Tray when closed</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

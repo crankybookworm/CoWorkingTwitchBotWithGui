@@ -8,16 +8,6 @@ a = Analysis(['bot_runner.py'],
     binaries = [],
     datas = [
         ('BotResources', 'BotResources')
-        # ('BotResources/resources/PomoBotUI.ui', 'BotResources/resources/PomoBotUI.ui'),
-        # ('BotResources/static/images/CoWorkingBotIcon.png', 'BotResources/static/images/CoWorkingBotIcon.png'),
-        # ('BotResources/resources/darkeum.qss', 'BotResources/resources/darkeum.qss'),
-        # ('BotResources/resources/botConfig.json', 'BotResources/resources/botConfig.json'),
-        # ('BotResources/resources/chatBotConfig.json', 'BotResources/resources/chatBotConfig.json'),
-        # ('BotResources/resources/botDatabase.json', 'BotResources/resources/botDatabase.json'),
-        # ('BotResources/resources/flipDict.json', 'BotResources/resources/flipDict.json'),
-        # ('BotResources/static/styles/pomoBoard.css', 'BotResources/static/styles/pomoBoard.css'),
-        # ('BotResources/templates/pomoBoard.html', 'BotResources/templates/pomoBoard.html'),
-        # ('BotResources/templates/index.html', 'BotResources/templates/index.html')
     ],
     hiddenimports = [],
     hookspath = [],

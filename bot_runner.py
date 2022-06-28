@@ -71,15 +71,46 @@ class PomoBotUi(QtWidgets.QMainWindow):
         self.show()
 
     def setUpButtons(self):
-        self.SetupStatusOnControl()
-        self.SetupButtonsOnBotSettings()
-        self.SetupsCheckboxesOnBotSettings()
-        self.SetupsEntriesOnBotSettings()
-        self.SetupEntriesOnChatBotConfig()
-        self.SetupEntriesOnWebOutputConfig()
+        self.setupStatusOnControl()
+        self.setupButtonsOnBotSettings()
+        self.setupsCheckboxesOnBotSettings()
+        self.setupsEntriesOnBotSettings()
+        self.setupEntriesOnChatBotConfig()
+        self.setupEntriesOnWebOutputConfig()
+        self.setupMinimizeToTray()
+
+    def setupMinimizeToTray(self):
+        self.minimizeToTrayCheck: QtWidgets.QCheckBox = self.window(
+        ).findChild(QtWidgets.QAction, "minimizeToTrayCheck")
+
+        # Init QSystemTrayIcon
+        self.tray_icon = QtWidgets.QSystemTrayIcon(
+            self, icon=self.windowIcon())
+
+        '''
+            Define and add steps to work with the system tray icon
+            show - show window
+            hide - hide window
+            exit - exit from application
+        '''
+        show_action = QtWidgets.QAction(text="Show", parent=self, icon=self.style(
+        ).standardIcon(QtWidgets.QStyle.SP_TitleBarMaxButton))
+        hide_action = QtWidgets.QAction(text="Hide", parent=self, icon=self.style(
+        ).standardIcon(QtWidgets.QStyle.SP_TitleBarMinButton))
+        quit_action = QtWidgets.QAction(text="Exit", parent=self, icon=self.style(
+        ).standardIcon(QtWidgets.QStyle.SP_TitleBarCloseButton))
+        show_action.triggered.connect(self.show)
+        hide_action.triggered.connect(self.hide)
+        quit_action.triggered.connect(QtWidgets.QApplication.instance().quit)
+        tray_menu = QtWidgets.QMenu()
+        tray_menu.addAction(show_action)
+        tray_menu.addAction(hide_action)
+        tray_menu.addAction(quit_action)
+        self.tray_icon.setContextMenu(tray_menu)
+        self.tray_icon.show()
 
 
-    def SetupStatusOnControl(self):
+    def setupStatusOnControl(self):
         # Trigger Bot Button
         self.triggerBotButton: QtWidgets.QPushButton = self.window().findChild(
             QtWidgets.QPushButton, "botTriggerButton")
@@ -102,7 +133,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
         self.botTriggerError.setVisible(False)
 
 
-    def SetupButtonsOnBotSettings(self):
+    def setupButtonsOnBotSettings(self):
         # Save Button on Bot Settings
         saveBotConfigButton: QtWidgets.QPushButton = self.window().findChild(
             QtWidgets.QDialogButtonBox, "saveOrResetBotConfig").children()[1]
@@ -134,7 +165,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
         oAuthLinkButton.clicked.connect(self.openTokenLink)
 
 
-    def SetupsCheckboxesOnBotSettings(self):
+    def setupsCheckboxesOnBotSettings(self):
         # Setups Checkboxes on Bot Settings
         self.pomoCheck: QtWidgets.QCheckBox = self.window(
         ).findChild(QtWidgets.QCheckBox, "pomoCheck")
@@ -174,7 +205,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
         self.webOutputCheck.stateChanged.connect(lambda x: webOutputTab.setTabVisible(3, bool(x)))
 
 
-    def SetupsEntriesOnBotSettings(self):
+    def setupsEntriesOnBotSettings(self):
         # Setups Entries on Bot Settings
         self.prefixEntry: QtWidgets.QLineEdit = self.window(
         ).findChild(QtWidgets.QLineEdit, "prefixEntry")
@@ -191,7 +222,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
         ).findChild(QtWidgets.QLineEdit, "webPortEntry")
 
 
-    def SetupEntriesOnChatBotConfig(self):
+    def setupEntriesOnChatBotConfig(self):
         # Setups Entries on ChatBot Config
         self.chatModeOn: QtWidgets.QPlainTextEdit = self.window(
         ).findChild(QtWidgets.QPlainTextEdit, "chatModeOn")
@@ -287,7 +318,7 @@ class PomoBotUi(QtWidgets.QMainWindow):
         ).findChild(QtWidgets.QPlainTextEdit, "rmvDoneUserNumFail")
         
 
-    def SetupEntriesOnWebOutputConfig(self):
+    def setupEntriesOnWebOutputConfig(self):
         self.pomoHtml: QtWidgets.QPlainTextEdit = self.window(
         ).findChild(QtWidgets.QPlainTextEdit, "pomoHtml")
         self.pomoHtml.textChanged.connect(self.reloadWebView)
@@ -611,6 +642,20 @@ class PomoBotUi(QtWidgets.QMainWindow):
         except Exception as e:
             logger.log(logging.ERROR, "Error Reseting pomoBoard.css %s", PomoBotUi.format_exception(e))
             self.raiseError("Error Reseting pomoBoard.css:\n%s" % PomoBotUi.format_exception(e))
+
+
+    # Override closeEvent, to intercept the window closing event
+    # The window will be closed only if there is no check mark in the check box
+    def closeEvent(self, event):
+        if self.minimizeToTrayCheck.isChecked():
+            event.ignore()
+            self.hide()
+            self.tray_icon.showMessage(
+                "Tray Program",
+                "Application was minimized to Tray",
+                QtWidgets.QSystemTrayIcon.Information,
+                2000
+            )
 
     @staticmethod
     def format_exception(e):
