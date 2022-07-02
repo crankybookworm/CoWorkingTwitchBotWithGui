@@ -356,7 +356,7 @@ class Pomo():
 
     @staticmethod
     def purge_tasks(channel: str):
-        table = db.table(channel.lower()+"-Task")
+        table = db.table(channel.lower())
         table.update(Pomo.tinyDbOperations("finishAllTasks"))
 
     # Task methods
@@ -510,8 +510,8 @@ class Pomo():
     def has_done_tasks(channel: str, user: Union[Chatter, PartialChatter, str]):
         table = db.table(channel.lower()+"-DoneTasks")
         userQuery = Pomo.get_userQuery(user)
-        doneTasks = table.contains(**userQuery)
-        return doneTasks and doneTasks.doneTasks.count() > 0
+        doneTasks = table.get(**userQuery)
+        return doneTasks and len(doneTasks.get("doneTasks")) > 0
 
     # Manipulate data
     @staticmethod

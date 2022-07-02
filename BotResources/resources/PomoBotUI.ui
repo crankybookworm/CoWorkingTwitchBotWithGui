@@ -1924,8 +1924,11 @@
                <string extracomment="HTML for Task. Anything outside of the 'tr' will be ignored."/>
               </property>
               <property name="plainText">
-               <string>&lt;tr class=&quot;task&quot; id=&quot;taskTemplate&quot;&gt;
+                <string>&lt;tr class=&quot;task&quot; id=&quot;taskTemplate&quot;&gt;
     &lt;td class=&quot;col1&quot;&gt;
+        &lt;span class=&quot;timeTaken&quot;&gt;
+            {timeTaken}
+        &lt;/span&gt;
         &lt;span class=&quot;done&quot;&gt;
             ✔
         &lt;/span&gt;
@@ -1936,9 +1939,6 @@
         &lt;/span&gt;
         &lt;span class=&quot;work&quot;&gt;
             {work}
-        &lt;/span&gt;
-        &lt;span class=&quot;timeTaken&quot;&gt;
-            {timeTaken}
         &lt;/span&gt;
     &lt;/td&gt;
 &lt;/tr&gt;</string>
@@ -1972,122 +1972,6 @@
                <enum>Qt::ScrollBarAsNeeded</enum>
               </property>
               <property name="plainText">
-               <string>/* Table Header CSS */
-
-thead&gt;tr {
-    border-radius: 1em 1em 0em 0em;
-    border: solid;
-    background-color: lightblue;
-    font-weight: bold;
-    text-align: center;
-}
-
-
-/* Table CSS */
-
-table,
-tr {
-    width: 100%;
-    table-layout: fixed;
-    border-spacing: 0px;
-}
-
-table {
-    white-space: nowrap;
-    color: black;
-}
-
-
-/* Styling Columns */
-
-.col1 {
-    text-align: right;
-    width: 2.25em;
-    padding-right: 5px;
-}
-
-.col2 {
-    display: block;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-
-/* Styling Rows */
-
-tr {
-    border-right: solid;
-    border-left: solid;
-}
-
-tbody&gt;tr:nth-child(odd) {
-    background-color: lightsalmon;
-}
-
-tbody&gt;tr:nth-child(even) {
-    background-color: lightblue;
-}
-
-tbody&gt;tr:last-child {
-    border-radius: 0em 0em 1em 1em;
-    border-bottom: solid;
-}
-
-
-/* Specific text CSS */
-
-.username {
-    color: black;
-}
-
-.work {
-    color: black;
-}
-
-.timeLeft {
-    color: black;
-    margin: 8px;
-}
-
-.iterations {
-    color: black;
-}
-
-.timeTaken {
-    color: black;
-}
-
-.done {
-    color: black;
-}
-
-
-/* This Class is added if the task is completed */
-
-.completed {
-    text-decoration: line-through;
-}
-
-
-/* Making it Flex */
-
-.table-responsive-stack tr {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
-    flex-direction: row;
-}
-
-.table-responsive-stack td,
-.table-responsive-stack th {
-    display: block;
-    -ms-flex: 1 1 auto;
-    flex: 1 1 auto;
-}</string>
               </property>
               <property name="backgroundVisible">
                <bool>false</bool>

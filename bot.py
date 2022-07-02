@@ -532,15 +532,28 @@ class CoWorkingBot(Bot):
         )
 
     @commands.command(name='finish')
-    async def finishTasks(self, ctx: commands.Context):
-        if Pomo.has_active_timer(ctx.channel.name, ctx.author):
+    async def finishTasks(self, ctx: commands.Context, username:str =''):
+        if(username != ''):
+            if (ctx.author.is_mod):
+                user = username.lower().replace('@', '')
+            else:
+                await ctx.reply(self.chatBotConfig.getText("invalidPermMod", username=ctx.author.display_name))
+                return
+        else: user = ctx.author
+
+        if Pomo.has_active_timer(ctx.channel.name, user):
             ctx.view.words[1] = 'complete'
+            if(username != ''):
+                ctx.view.words[2] = user
             await self.pomoCommand(ctx)
             return
-        if not Pomo.has_active_task(ctx.channel.name, ctx.author):
-            await ctx.reply(self.chatBotConfig.getText("noRunningTask", username=ctx.channel.name))
+        if not Pomo.has_active_task(ctx.channel.name, user):
+            if(username == ''):
+                await ctx.reply(self.chatBotConfig.getText("noRunningTask", username=ctx.channel.name))
+                return
+            await ctx.reply(f"{username} have no ongoing task. Use !task <work> to start a task.")
             return
-        task: Task = Pomo.finish_task(ctx.channel.name, ctx.author)
+        task: Task = Pomo.finish_task(ctx.channel.name, user)
         task.done = True
         await ctx.reply(
             self.chatBotConfig.getText("completedTask", task=task)
@@ -568,20 +581,24 @@ class CoWorkingBot(Bot):
     @commands.command(name='rmvdone')
     async def rmvDoneTasksFromBoard(self,
                                     ctx: commands.Context,
-                                    arg1: str = '',
+                                    taskIndex: str = '',
                                     username: str = ''):
-        if(username != ''):
+        if((taskIndex != '' and not taskIndex.isdigit() and taskIndex.lower() != 'all') or (username != '')):
+            if(username == ''):
+                username = taskIndex
+                taskIndex = 'all'
             if (ctx.author.is_mod):
                 user = username.lower().replace('@', '')
                 if(not Pomo.has_done_tasks(ctx.channel.name, user)):
-                    await ctx.reply(f"{username} has no completed tasks.")
+                    await ctx.reply(self.chatBotConfig.getText("rmvDoneUserFail", username=username))
+                    return
             else:
-                await ctx.reply(f"Nice Try! Only Mods can do this.")
+                await ctx.reply(self.chatBotConfig.getText("invalidPermMod", username=ctx.author.display_name))
                 return
         else: user = ctx.author
 
         if(Pomo.has_done_tasks(ctx.channel.name, user)):
-            if(arg1 == '' or arg1.lower() == 'all'):
+            if(taskIndex == '' or taskIndex.lower() == 'all'):
                 if(Pomo.remove_done_all(ctx.channel.name, user)):
                     if(username == ''):
                         await ctx.reply(self.chatBotConfig.getText("rmvDone", username=user.display_name))
@@ -594,7 +611,7 @@ class CoWorkingBot(Bot):
                         await ctx.reply(self.chatBotConfig.getText("rmvDoneUserFail", username=username))
             else:
                 try:
-                    taskNumber = int(arg1)
+                    taskNumber = int(taskIndex)
                     if(Pomo.remove_done_index(ctx.channel.name, user, taskNumber)):
                         if(username == ''):
                             await ctx.reply(self.chatBotConfig.getText("rmvDoneNum", username=user.display_name, index=taskNumber))

@@ -1,6 +1,9 @@
 {% block body %}
 <tr class="task" id="taskTemplate">
     <td class="col1">
+        <span class="timeTaken">
+            {timeTaken}
+        </span>
         <span class="done">
             ✔
         </span>
@@ -11,9 +14,6 @@
         </span>
         <span class="work">
             {work}
-        </span>
-        <span class="timeTaken">
-            {timeTaken}
         </span>
     </td>
 </tr>
