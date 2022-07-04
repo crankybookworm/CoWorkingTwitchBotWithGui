@@ -61,7 +61,7 @@ class BotConfig():
         disabledCommands = []
         for cmd, value in self.__dict__.items():
             if type(value) is bool and cmd.endswith("CmdEnabled") and value == False:
-                disabledCommands.append(cmd.removesuffix("CmdEnabled"))
+                disabledCommands.append(cmd[:-len("CmdEnabled")])
         return disabledCommands
 
     def loadFromFile(botConfigPath) -> "BotConfig":

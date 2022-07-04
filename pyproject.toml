@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "coworkingbot"
+version = "0.2.3"
+description = ""
+authors = ["Cranky Bookworm <bookworm.cranky@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.8.0,<3.9"
+numpy = "^1.22.2"
+replit = "^3.2.4"
+tinydb = "^4.7.0"
+twitchio = "^2.3.0"
+Flask = "^2.1.2"
+PyQt5 = "^5.15.7"
+pytz = "^2022.1"
+python-dateutil = "^2.8.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
